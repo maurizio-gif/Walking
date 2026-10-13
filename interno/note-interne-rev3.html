@@ -1,0 +1,186 @@
+<title>Walking Program note interne</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;700&family=Ubuntu+Condensed&family=Ubuntu+Mono:wght@400;700&display=swap">
+<style>
+  /* Layout: colonna di lettura singola, tabelle in contenitori scorrevoli, stesso sistema grafico della proposta */
+  :root{
+    --bg:#FFFFFF; --surface:#F5F5F2; --ink:#212934; --muted:#5B6270; --border:#DCDEE2;
+    --yellow:#FFF200; --on-yellow:#171717; --red:#D92B2B; --dark:#171717;
+    --display:'Ubuntu Condensed','Ubuntu',system-ui,sans-serif;
+    --body:'Ubuntu',system-ui,-apple-system,sans-serif;
+    --mono:'Ubuntu Mono',ui-monospace,monospace;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){ --bg:#141414; --surface:#202020; --ink:#F2F2EC; --muted:#ACAFA6; --border:#343434; --red:#FF6B6B; --dark:#0A0A0A; color-scheme:dark; }
+  }
+  :root[data-theme="dark"]{ --bg:#141414; --surface:#202020; --ink:#F2F2EC; --muted:#ACAFA6; --border:#343434; --red:#FF6B6B; --dark:#0A0A0A; color-scheme:dark; }
+  *{ box-sizing:border-box; }
+  body{ background:var(--bg); color:var(--ink); font-family:var(--body); font-size:15px; line-height:1.6; }
+  .wrap{ max-width:880px; margin:0 auto; padding-inline:16px; padding-block:32px 72px; }
+  @media (min-width:700px){ .wrap{ padding-inline:32px; } }
+  .banner{ display:inline-block; background:var(--red); color:#fff; font-family:var(--mono); font-size:11px; letter-spacing:.1em; text-transform:uppercase; padding:3px 9px; margin-bottom:12px; }
+  h1,h2{ font-family:var(--display); font-weight:400; text-transform:uppercase; letter-spacing:.01em; line-height:1.05; text-wrap:balance; }
+  h1{ font-size:clamp(28px,5vw,40px); margin:0 0 8px; }
+  h2{ font-size:23px; margin:40px 0 12px; padding-bottom:8px; border-bottom:2px solid var(--dark); }
+  :root[data-theme="dark"] h2{ border-color:var(--border); }
+  h3{ font-size:15px; margin:24px 0 8px; }
+  .lead{ color:var(--muted); margin:0 0 18px; }
+  p{ margin:0 0 10px; }
+  .files{ display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:8px; margin:14px 0; }
+  .files div{ background:var(--surface); border:1px solid var(--border); padding:9px 12px; font-size:13px; min-width:0; }
+  .files code{ font-family:var(--mono); font-size:12.5px; word-break:break-all; display:block; color:var(--ink); }
+  .files span{ color:var(--muted); }
+  .t{ overflow-x:auto; border:1px solid var(--border); margin:10px 0 6px; }
+  table{ width:100%; border-collapse:collapse; font-size:13.5px; }
+  th{ text-align:left; font-family:var(--mono); font-size:11px; letter-spacing:.07em; text-transform:uppercase; color:var(--muted); background:var(--surface); padding:8px 11px; border-bottom:1px solid var(--border); }
+  td{ padding:8px 11px; border-bottom:1px solid var(--border); vertical-align:top; }
+  tr:last-child td{ border-bottom:none; }
+  td.n,th.n{ text-align:right; font-family:var(--mono); font-variant-numeric:tabular-nums; white-space:nowrap; }
+  td.k{ font-weight:700; white-space:nowrap; }
+  tr.tot td{ background:var(--surface); font-weight:700; }
+  tr.moved td{ background:color-mix(in srgb, var(--yellow) 22%, var(--bg)); }
+  ol.items{ list-style:none; padding:0; margin:0; counter-reset:i var(--start,0); }
+  ol.items > li{ counter-increment:i; position:relative; padding:10px 0 10px 40px; border-bottom:1px solid var(--border); }
+  ol.items > li::before{ content:counter(i); position:absolute; left:0; top:10px; width:26px; height:26px; border-radius:50%; background:var(--dark); color:var(--yellow); font-family:var(--mono); font-size:12px; font-weight:700; display:flex; align-items:center; justify-content:center; }
+  ol.items.block > li::before{ background:var(--red); color:#fff; }
+  ul{ padding-left:20px; margin:6px 0; }
+  li{ margin-bottom:4px; }
+  .check{ list-style:none; padding:0; }
+  .check li{ padding-left:22px; position:relative; }
+  .check li::before{ content:'\2713'; position:absolute; left:0; color:var(--red); font-weight:700; }
+  .note{ background:var(--surface); border-left:4px solid var(--yellow); padding:10px 14px; font-size:14px; margin:12px 0; }
+  a{ color:inherit; }
+  code{ font-family:var(--mono); font-size:.92em; }
+</style>
+
+<div class="wrap">
+  <span class="banner">Solo uso interno · non inviare al cliente</span>
+  <h1>Walking Program · Revisione 3: note interne</h1>
+  <p class="lead">Riepilogo delle modifiche, decisioni da chiudere prima dell'invio e stima interna delle giornate. Ready2Digital, 13 ottobre 2026.</p>
+
+  <div class="files">
+    <div><code><a href="https://claude.ai/artifact/Y71ESxaj4QybzwWQx7qKN2" target="_blank" rel="noopener">Proposta Rev. 3 (pagina privata)</a></code><span>Versione web della proposta per il cliente</span></div>
+    <div><code>proposta/Walking-Program_Proposta_Rev3.pdf</code><span>8 pagine A4: 7 di proposta, 1 di appendice</span></div>
+    <div><code>proposta/Walking-Program_Proposta_Rev3.html</code><span>Sorgente modificabile; <code>genera-pdf.mjs</code> rigenera il PDF</span></div>
+    <div><code>interno/</code><span>Queste note, la stima delle giornate e la copia della Rev. 2, sul branch <code>main</code> di maurizio-gif/Walking</span></div>
+  </div>
+
+  <h2>Decisioni da chiudere prima dell'invio</h2>
+  <h3>Bloccanti</h3>
+  <ol class="items block">
+    <li><b>Costo ricorrente (componenti A e B).</b> Il PDF promette che costo e condizioni di servizio saranno formalizzati prima della firma. Vanno definiti: prezzo, volumi inclusi (ordini/mese, ore di video in archivio e in streaming, email/mese, spazio), livelli di servizio e tempi di intervento, perimetro dell'assistenza operativa. Da decidere se inviarli in un allegato insieme alla proposta o subito dopo.</li>
+    <li><b>Fattibilità del calendario.</b> Con i diplomi in Fase 1 la stima passa da 62 a 67 giornate e il go-live resta alla settimana 14. I diplomi sono nelle settimane 9–12, in parallelo a video, area istruttore e migrazione. Le settimane 9–13 sono le più cariche: va verificata la capacità reale prima di confermare la settimana 14.</li>
+  </ol>
+
+  <h3>Quantità da concordare prima della firma</h3>
+  <ol class="items" style="--start:2">
+    <li><b>Landing page al lancio.</b> Il documento include il template; landing e testi ulteriori sono esclusi. Va deciso se al go-live ne consegniamo alcune e quante.</li>
+    <li><b>Video e manuali al lancio.</b> Il documento dice che le quantità "saranno concordate". Servono numero di corsi on demand, ore di video, numero di PDF, e chi li carica (noi o lo staff).</li>
+    <li><b>Template.</b> Quanti template newsletter prestabiliti, quanti modelli di diploma (standard e certificazione) e quanti modelli di biglietto.</li>
+    <li><b>Segmenti newsletter.</b> Numero e definizione dei segmenti concordati (in tabella materiali entro la settimana 16).</li>
+    <li><b>Pagine in inglese.</b> Il documento dice "sito in inglese" con catalogo ridotto. Va confermato se tutte le pagine della sitemap vanno tradotte o solo una parte.</li>
+    <li><b>Sitemap.</b> Le pagine incluse sono quelle della mappa Octopus in appendice. Conviene far confermare che l'elenco è completo, ad esempio il numero di pagine Case studies e Media.</li>
+  </ol>
+
+  <h3>Mie ipotesi, da confermare</h3>
+  <ol class="items" style="--start:8">
+    <li><b>Date dei materiali</b> non presenti nella Rev. 2: regole operative di Fase 1 (comprese quelle di emissione dei diplomi) entro la settimana 3; modelli dei diplomi ed elenco degli approvatori entro la 8 (in Rev. 2 erano alla 15); backup aggiornato del sito attuale entro la 10 (riga nuova, serve all'impegno sulla migrazione); segmenti newsletter entro la 16.</li>
+    <li><b>Assistenza di 30 giorni</b>, descritta come "correggere eventuali malfunzionamenti e accompagnare lo staff nelle prime settimane".</li>
+    <li><b>Verifica della migrazione</b>, descritta come "verificata insieme prima del go-live". Conviene definire il metodo: conteggi per tabella e controlli a campione.</li>
+    <li><b>"Le approvazioni avvengono fuori dal sito"</b> nella tabella AS-IS. È ricavata dalla Rev. 2 ("tutto avviene fuori piattaforma").</li>
+    <li><b>Riquadro "Chi realizza il progetto"</b>: cita lo sviluppo assistito dall'AI sotto la nostra responsabilità di progettazione, verifica e collaudo, senza riferimenti a efficienza o margini. Toglilo se preferisci non menzionarlo.</li>
+  </ol>
+
+  <h3>Punti operativi e commerciali</h3>
+  <ol class="items" style="--start:13">
+    <li><b>Regole operative</b> già elencate nel riquadro per il cliente: acquirente/partecipante, posti multipli e raccolta dei nominativi, durata degli accessi, annullamenti e rimborsi, momento dei crediti, regole di emissione dei diplomi, scadenze delle certificazioni. Se le certificazioni scadono, rinnovi e promemoria sono funzioni nuove da quotare a parte.</li>
+    <li><b>PayPal "Paga in 3 rate"</b>: va verificata l'abilitazione sul conto di Walking Program e i limiti di importo.</li>
+    <li><b>Importi per fase della Rev. 2</b> (18.000 / 8.000 / 2.000, sconto 6.000): non vanno riutilizzati se il cliente chiede una sola fase, perché il perimetro di Fase 1 è cambiato con i diplomi.</li>
+    <li><b>Link della Rev. 2.</b> L'artifact "Piattaforma Walking Program" non è stato toccato. La Rev. 3 è una pagina privata separata: per mostrarla al cliente va condivisa dal menu Share.</li>
+  </ol>
+
+  <h2>Modifiche applicate</h2>
+  <div class="t">
+    <table>
+      <thead><tr><th>Richiesta</th><th>Cosa è stato fatto</th></tr></thead>
+      <tbody>
+        <tr><td class="k">1 · LMS</td><td>La sintesi parte dal testo indicato e scioglie l'acronimo alla prima occorrenza. Si usa sempre "piattaforma formativa con funzioni LMS". Il beneficio è il sistema unico per acquisto, accesso e certificazione. Una frase dichiara cosa non comprende: quiz, esami online, tracciamento del completamento, SCORM.</td></tr>
+        <tr><td class="k">2 · Giornate</td><td>Tolti i ~96 giorni, le colonne e i totali. Al posto della tabella analitica c'è una matrice Area / Cosa viene consegnato / Fase, in appendice. Calendario confermato: Fase 1 entro la settimana 14, completamento entro la 21, subordinato a materiali e approvazioni.</td></tr>
+        <tr><td class="k">3 · Fasi</td><td>Diplomi standard e di certificazione (bozza, decisione, storico, pubblicazione, notifica) in Fase 1 ovunque. Regole, modelli e approvatori anticipati fra i materiali di Fase 1.</td></tr>
+        <tr><td class="k">4 · Investimento</td><td>22.000 € + IVA per l'affidamento congiunto; IVA 4.840 €; totale 26.840 €; milestone 30/20/20/15/15. Eliminati listino, sconto, importi per fase e l'interruttore "Includi la Fase 2". Una sola fase richiede una proposta dedicata.</td></tr>
+        <tr><td class="k">5 · Newsletter</td><td>Prima versione con 8 voci incluse e 6 escluse. Corretto "senza strumenti esterni": il modulo è integrato nel pannello e invia tramite SendGrid.</td></tr>
+        <tr><td class="k">6 · Regole</td><td>Riquadro "Regole da confermare in avvio" diviso in Già previsto / Da decidere insieme. Diploma standard all'acquisto indicato come ipotesi; QR del biglietto identificativo, senza scansione né check-in.</td></tr>
+        <tr><td class="k">7 · Consegne</td><td>Pagine legate alla sitemap in appendice. Revisioni esplicite: 1 sul design, 1 sui testi IT, 1 sulle traduzioni EN. Distinte realizzazione dei template, inserimento iniziale e gestione autonoma. Migrazione formulata come impegno verificabile; niente garanzie SEO né AI; resta la manutenzione; resta il limite della protezione video.</td></tr>
+        <tr><td class="k">8 · Canone</td><td>Componenti A (infrastruttura), B (assistenza operativa) e C (evoluzioni), senza prezzi. Formalizzazione prima della firma. I 30 giorni di assistenza sono distinti dai servizi continuativi. Commissioni a carico del cliente.</td></tr>
+        <tr><td class="k">9 · Impaginazione</td><td>7 sezioni più appendice, 8 pagine A4. Nessuna pagina vuota né titolo isolato. Progetti di riferimento in un riquadro compatto. Tolti stack, flusso tecnico dei video ed elenco dei plugin.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>Verifiche eseguite</h3>
+  <ul class="check">
+    <li>La definizione di LMS combacia con le funzioni incluse; le esclusioni compaiono in sintesi, nelle regole e in "Non compreso".</li>
+    <li>Diplomi e approvazioni in Fase 1 in tutte le occorrenze; nessun diploma in Fase 2.</li>
+    <li>6.600 + 4.400 + 4.400 + 3.300 + 3.300 = 22.000 €; 100%; IVA 4.840 €; totale 26.840 €.</li>
+    <li>Settimane coerenti fra gantt, milestone e pagamenti (7, 14, 15, 21); ogni materiale arriva prima dell'attività che lo usa.</li>
+    <li>Nel testo del PDF nessuna occorrenza di giornate, listino, "LMS completo", "senza strumenti esterni" o "nessun dato storico".</li>
+    <li>8 pagine controllate una per una; versione web controllata anche su mobile e in tema scuro.</li>
+  </ul>
+
+  <h2>Stima interna delle giornate</h2>
+  <p>Fonte: matrice della Rev. 2, con le voci dei diplomi spostate in Fase 1. Le singole stime non sono cambiate.</p>
+  <div class="t">
+    <table>
+      <thead><tr><th>Fase 1 · Area</th><th>Voce</th><th class="n">Giornate</th></tr></thead>
+      <tbody>
+        <tr><td class="k">Impostazione</td><td>Sitemap, architettura, data model</td><td class="n">2</td></tr>
+        <tr><td class="k">Design</td><td>Nuova grafica, design, mobile</td><td class="n">6</td></tr>
+        <tr><td class="k">Sito</td><td>Sitemap completa</td><td class="n">4,5</td></tr>
+        <tr><td class="k">Contenuti</td><td>Copy in italiano</td><td class="n">4</td></tr>
+        <tr><td class="k">Sito</td><td>Calendario in home, liste istruttori / non istruttori</td><td class="n">3</td></tr>
+        <tr><td class="k">Catalogo</td><td>On demand, in presenza, eventi; limiti posti</td><td class="n">3,5</td></tr>
+        <tr><td class="k">Checkout</td><td>Stripe, PayPal, coupon, tariffe, prezzi differenziati</td><td class="n">4</td></tr>
+        <tr><td class="k">Checkout</td><td>Pagamento in 3 rate</td><td class="n">1,5</td></tr>
+        <tr><td class="k">Biglietti</td><td>Biglietto nominativo con codice e QR</td><td class="n">3</td></tr>
+        <tr><td class="k">Account</td><td>Account automatico, password, login</td><td class="n">2,5</td></tr>
+        <tr><td class="k">Email</td><td>Email transazionali</td><td class="n">2,5</td></tr>
+        <tr><td class="k">On demand</td><td>Video Bunny Stream con link firmati</td><td class="n">4,5</td></tr>
+        <tr><td class="k">Area istruttore</td><td>Dashboard, I miei corsi, profilo</td><td class="n">6</td></tr>
+        <tr><td class="k">Admin</td><td>Pannello di gestione</td><td class="n">4,5</td></tr>
+        <tr><td class="k">WP Walker</td><td>Richiesta di preventivo</td><td class="n">1</td></tr>
+        <tr><td class="k">Marketing e SEO</td><td>SEO, cookie, privacy, GTM, UTM, landing</td><td class="n">2</td></tr>
+        <tr><td class="k">Migrazione</td><td>Albo, ordini, account, catalogo</td><td class="n">4,5</td></tr>
+        <tr><td class="k">Collaudo</td><td>Test, formazione, go-live Fase 1</td><td class="n">3</td></tr>
+        <tr class="moved"><td class="k">Diplomi (da F2)</td><td>Diplomi PDF standard</td><td class="n">2</td></tr>
+        <tr class="moved"><td class="k">Diplomi (da F2)</td><td>Diplomi di certificazione con approvazione</td><td class="n">3</td></tr>
+        <tr class="tot"><td colspan="2">Totale Fase 1</td><td class="n">67</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="t">
+    <table>
+      <thead><tr><th>Fase 2 · Area</th><th>Voce</th><th class="n">Giornate</th></tr></thead>
+      <tbody>
+        <tr><td class="k">Crediti</td><td>Crediti, livelli, ranking</td><td class="n">3,5</td></tr>
+        <tr><td class="k">Area palestra</td><td>Ruolo palestra, collegamento trainer</td><td class="n">5</td></tr>
+        <tr><td class="k">Palestre</td><td>Pagina pubblica palestre affiliate</td><td class="n">2,5</td></tr>
+        <tr><td class="k">Inglese</td><td>Struttura multilingua, regole catalogo</td><td class="n">4</td></tr>
+        <tr><td class="k">Traduzioni</td><td>Traduzioni in inglese</td><td class="n">3</td></tr>
+        <tr><td class="k">Dati</td><td>Palestre, crediti pregressi, ranking iniziale</td><td class="n">1,5</td></tr>
+        <tr><td class="k">Newsletter</td><td>Modulo integrato, prima versione</td><td class="n">6</td></tr>
+        <tr><td class="k">Collaudo</td><td>Test, formazione, go-live Fase 2</td><td class="n">3</td></tr>
+        <tr class="tot"><td colspan="2">Totale Fase 2</td><td class="n">28,5</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="t">
+    <table>
+      <thead><tr><th>Confronto</th><th class="n">Rev. 2</th><th class="n">Rev. 3</th></tr></thead>
+      <tbody>
+        <tr><td class="k">Fase 1</td><td class="n">62</td><td class="n">67</td></tr>
+        <tr><td class="k">Fase 2</td><td class="n">33,5</td><td class="n">28,5</td></tr>
+        <tr class="tot"><td>Totale</td><td class="n">95,5</td><td class="n">95,5</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="note">La stima della newsletter (6 giornate) era fatta su un perimetro più ampio, con liste dinamiche ed editor. Con la prima versione definita nella Rev. 3 ha margine; non l'ho ridotta.</div>
+</div>
