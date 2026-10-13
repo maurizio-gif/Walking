@@ -1,0 +1,736 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Piattaforma Walking Program</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;500;700&family=Ubuntu+Condensed&family=Ubuntu+Mono:wght@400;700&display=swap">
+<style>
+
+  :root{
+    --bg:#FFFFFF; --surface:#FFFFFF; --surface-2:#F5F5F2;
+    --ink:#212934; --ink-muted:#5B6270; --border:#DCDEE2;
+    --yellow:#FFF200; --on-yellow:#171717; --red:#FF3333; --dark:#171717;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#141414; --surface:#1C1C1C; --surface-2:#232323;
+      --ink:#F2F2EC; --ink-muted:#ACAFA6; --border:#343434;
+      --yellow:#FFF200; --on-yellow:#141414; --red:#FF5C5C; --dark:#0A0A0A;
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#141414; --surface:#1C1C1C; --surface-2:#232323;
+    --ink:#F2F2EC; --ink-muted:#ACAFA6; --border:#343434;
+    --yellow:#FFF200; --on-yellow:#141414; --red:#FF5C5C; --dark:#0A0A0A;
+  }
+
+  *{ box-sizing:border-box; }
+  body{
+    background:var(--bg); color:var(--ink);
+    font-family:'Ubuntu', system-ui, -apple-system, sans-serif;
+    font-size:14.5px; line-height:1.6; -webkit-font-smoothing:antialiased;
+  }
+  .wrap{ max-width:1120px; margin:0 auto; padding:40px 32px 90px; }
+  h1,h2{ font-weight:400; font-family:'Ubuntu Condensed','Ubuntu',sans-serif; text-transform:uppercase; letter-spacing:0.01em; line-height:0.98; color:var(--ink); text-wrap:balance; }
+  .mono{ font-family:'Ubuntu Mono', ui-monospace, monospace; font-variant-numeric:tabular-nums; }
+  .eyebrow{ font-family:'Ubuntu Mono', monospace; font-size:11px; letter-spacing:0.12em; text-transform:uppercase; color:var(--ink-muted); }
+  p{ max-width:none; }
+  .muted{ color:var(--ink-muted); }
+  strong{ font-weight:700; }
+  a{ color:inherit; }
+
+  .signpost{ display:flex; align-items:center; gap:20px; border-bottom:3px solid var(--dark); padding-bottom:22px; margin-bottom:30px; }
+  .logo-img{ flex:none; height:64px; width:auto; background:#fff; padding:6px 10px; border:3px solid var(--dark); }
+  .signpost h1{ font-size:clamp(26px,4.6vw,40px); margin:0 0 6px; }
+  .signpost .accent-word{ color:var(--red); }
+  .meta-row{ display:flex; flex-wrap:wrap; gap:6px 22px; margin-top:6px; }
+  .meta-item{ font-family:'Ubuntu Mono', monospace; font-size:11px; color:var(--ink-muted); }
+  .meta-item b{ color:var(--ink); font-weight:700; }
+
+  .stats{ display:grid; grid-template-columns:repeat(4,1fr); gap:1px; background:var(--border); border:1px solid var(--border); margin-bottom:38px; }
+  .stat{ background:var(--surface); padding:14px 14px 12px; }
+  .stat .n{ font-family:'Ubuntu Condensed',sans-serif; font-size:28px; color:var(--red); line-height:1; }
+  .stat .l{ margin-top:5px; font-size:11px; color:var(--ink-muted); }
+  @media (max-width:640px){ .stats{ grid-template-columns:repeat(2,1fr);} }
+
+  section{ margin-bottom:46px; }
+  .section-head{ display:flex; align-items:center; gap:12px; margin-bottom:14px; border-bottom:1px solid var(--border); padding-bottom:10px; }
+  .section-badge{
+    flex:none; width:26px; height:26px; border-radius:50%; background:var(--dark);
+    color:var(--yellow); font-family:'Ubuntu Mono',monospace; font-size:11px; font-weight:700;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .section-head h2{ font-size:22px; font-weight:400; margin:0; }
+  .section-head .eyebrow{ margin:0 0 0 auto; }
+  h3.sub{ font-family:'Ubuntu',sans-serif; text-transform:none; font-size:14.5px; font-weight:700; margin:26px 0 10px; letter-spacing:0; }
+
+  .tagcloud{ display:flex; flex-wrap:wrap; gap:7px; margin:14px 0 4px; }
+  .tag{ font-family:'Ubuntu Mono',monospace; font-size:11px; padding:5px 9px; border:1px solid var(--border); color:var(--ink-muted); background:var(--surface-2); }
+
+  /* gap list */
+  .gap-group{ margin-top:18px; background:var(--surface); border:1px solid var(--border); }
+  .gap-item{ display:flex; gap:14px; padding:12px 16px; border-bottom:1px solid var(--border); align-items:flex-start; }
+  .gap-group .gap-item:last-child{ border-bottom:none; }
+  .gap-item .g-text{ flex:1; }
+  .gap-item .g-title{ font-weight:700; font-size:13.5px; display:block; }
+  .gap-item .g-impact{ color:var(--ink-muted); font-size:12.5px; margin-top:2px; display:block; }
+  .severity{ flex:none; font-family:'Ubuntu Mono',monospace; font-size:10px; letter-spacing:0.05em; text-transform:uppercase; padding:3px 8px; border:1px solid currentColor; white-space:nowrap; margin-top:1px; }
+  .severity.alto{ color:var(--red); }
+  .severity.medio{ color:var(--ink-muted); }
+
+  /* sitemap */
+  .sitemap{ display:grid; grid-template-columns:repeat(4,1fr); gap:12px; }
+  @media (max-width:900px){ .sitemap{ grid-template-columns:repeat(2,1fr); } }
+  @media (max-width:560px){ .sitemap{ grid-template-columns:1fr; } }
+  .sm-col{ background:var(--surface); border:1px solid var(--border); padding:12px 14px; }
+  .sm-col h4{ margin:0 0 6px; font-size:13px; font-weight:700; }
+  .sm-col ul{ margin:0; padding-left:16px; font-size:12px; color:var(--ink-muted); }
+  .sm-col li{ margin-bottom:3px; }
+  .sm-col .ph{ font-family:'Ubuntu Mono',monospace; font-size:10px; letter-spacing:0.06em; text-transform:uppercase; color:var(--ink-muted); margin-bottom:4px; display:block; }
+
+  /* area cards */
+  .areas{ display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+  @media (max-width:760px){ .areas{ grid-template-columns:1fr; } }
+  .area{ background:var(--surface); border:1px solid var(--border); padding:16px 18px; }
+  .area .a-top{ display:flex; justify-content:space-between; align-items:baseline; gap:10px; margin-bottom:6px; }
+  .area h4{ margin:0; font-size:14px; font-weight:700; }
+  .phase-chip{ font-family:'Ubuntu Mono',monospace; font-size:10px; letter-spacing:0.06em; text-transform:uppercase; padding:2px 7px; border:1px solid currentColor; white-space:nowrap; }
+  .phase-chip.f1{ color:var(--ink); }
+  .phase-chip.f2{ color:var(--red); }
+  .phase-chip.opz{ color:var(--ink-muted); border-style:dashed; }
+  .area p{ margin:0 0 8px; font-size:12.8px; color:var(--ink-muted); }
+  .area ul{ margin:0; padding-left:17px; font-size:12.5px; }
+  .area li{ margin-bottom:4px; }
+
+  /* flows */
+  .flow{ display:grid; grid-template-columns:repeat(5,1fr); gap:10px; counter-reset:step; }
+  @media (max-width:900px){ .flow{ grid-template-columns:1fr 1fr; } }
+  @media (max-width:560px){ .flow{ grid-template-columns:1fr; } }
+  .flow .st{ background:var(--surface); border:1px solid var(--border); padding:12px 14px; position:relative; }
+  .flow .st::before{
+    counter-increment:step; content:counter(step);
+    display:inline-flex; width:22px; height:22px; border-radius:50%; background:var(--dark); color:var(--yellow);
+    font-family:'Ubuntu Mono',monospace; font-size:11px; font-weight:700; align-items:center; justify-content:center; margin-bottom:8px;
+  }
+  .flow .st b{ display:block; font-size:12.8px; margin-bottom:3px; }
+  .flow .st span{ font-size:12px; color:var(--ink-muted); display:block; }
+  .flow.four{ grid-template-columns:repeat(4,1fr); }
+  @media (max-width:900px){ .flow.four{ grid-template-columns:1fr 1fr; } }
+  @media (max-width:560px){ .flow.four{ grid-template-columns:1fr; } }
+
+  .note-box{ margin-top:12px; background:var(--surface-2); border:1px solid var(--border); padding:12px 16px; font-size:12.8px; }
+  .note-box b{ font-weight:700; }
+
+  /* tables */
+  .table-scroll{ overflow-x:auto; border:1px solid var(--border); }
+  table{ width:100%; border-collapse:collapse; background:var(--surface); }
+  thead th{ text-align:left; font-family:'Ubuntu Mono',monospace; font-size:10.5px; letter-spacing:0.07em; text-transform:uppercase; color:var(--ink-muted); background:var(--surface-2); padding:9px 12px; border-bottom:1px solid var(--border); white-space:nowrap; }
+  tbody td{ padding:10px 12px; border-bottom:1px solid var(--border); vertical-align:top; font-size:12.8px; }
+  tbody tr:last-child td{ border-bottom:none; }
+  td.num, th.num{ text-align:right; white-space:nowrap; font-family:'Ubuntu Mono',monospace; font-variant-numeric:tabular-nums; }
+  td.area-c{ font-weight:700; white-space:nowrap; }
+  td.sol{ color:var(--ink-muted); }
+  tr.phase-row td{ background:var(--surface-2); font-family:'Ubuntu Condensed',sans-serif; text-transform:uppercase; font-size:15px; letter-spacing:0.02em; padding:9px 12px; }
+  tr.subtotal td{ background:var(--surface-2); font-weight:700; }
+  tr.subtotal td.num{ font-size:13.5px; }
+  tr.grand td{ background:var(--dark); color:var(--yellow); font-weight:700; }
+  table.oggi td.today{ color:var(--ink-muted); }
+  table.oggi td.today::before{ content:'\2715  '; color:var(--red); font-weight:700; }
+  table.oggi td.tomorrow{ font-weight:500; }
+  table.oggi td.tomorrow::before{ content:'\2713  '; color:var(--red); font-weight:700; }
+  table.oggi td.label{ font-weight:700; white-space:nowrap; }
+  .m-wide{ min-width:880px; }
+
+  /* gantt */
+  .gantt-box{ background:var(--surface); border:1px solid var(--border); padding:14px 14px 10px; overflow-x:auto; }
+  .gantt-box svg{ display:block; min-width:820px; width:100%; height:auto; }
+  .g-txt{ font-family:'Ubuntu',sans-serif; font-size:11px; fill:var(--ink); }
+  .g-mut{ font-family:'Ubuntu Mono',monospace; font-size:10px; fill:var(--ink-muted); }
+  .g-grid{ stroke:var(--border); stroke-width:1; }
+  .g-f1{ fill:var(--ink); }
+  .g-f2{ fill:var(--red); }
+  .g-ms{ stroke:var(--ink-muted); stroke-width:1; stroke-dasharray:3 3; }
+  .legend{ display:flex; flex-wrap:wrap; gap:18px; margin-top:10px; padding-top:10px; border-top:1px solid var(--border); }
+  .legend-item{ display:flex; align-items:center; gap:8px; font-size:12px; color:var(--ink-muted); }
+  .swatch{ width:11px; height:11px; flex:none; }
+
+  /* investimento */
+  .toggle{ display:flex; align-items:center; gap:10px; background:var(--surface-2); border:1px solid var(--border); padding:12px 16px; margin-bottom:14px; cursor:pointer; font-size:13px; }
+  .toggle input{ accent-color:var(--yellow); width:17px; height:17px; flex:none; }
+  .toggle b{ font-weight:700; }
+  .summary{ display:grid; grid-template-columns:repeat(4,1fr); gap:1px; background:var(--border); border:1px solid var(--dark); }
+  @media (max-width:760px){ .summary{ grid-template-columns:1fr 1fr; } }
+  .summary .cell{ background:var(--surface); padding:16px 18px; }
+  .summary .cell.total{ background:var(--dark); }
+  .summary .cell.total .v{ color:var(--yellow); }
+  .summary .cell.total .k{ color:#C9C9C9; }
+  .summary .k{ font-family:'Ubuntu Mono',monospace; font-size:10.5px; letter-spacing:0.08em; text-transform:uppercase; color:var(--ink-muted); margin-bottom:6px; }
+  .summary .v{ font-family:'Ubuntu Condensed',sans-serif; font-size:25px; }
+  .summary .v .strike{ font-size:0.55em; color:var(--ink-muted); text-decoration:line-through; font-family:'Ubuntu Mono',monospace; margin-right:8px; font-weight:400; }
+  .vat-note{ font-size:10.5px; color:#9a9a94; margin-top:6px; }
+  .discount-line{ display:flex; justify-content:space-between; gap:12px; flex-wrap:wrap; margin-top:10px; padding:10px 16px; border:1px dashed var(--ink-muted); font-size:12.8px; }
+  .discount-line b{ color:var(--red); }
+
+  .cols{ display:grid; grid-template-columns:1fr 1fr; gap:22px; }
+  @media (max-width:760px){ .cols{ grid-template-columns:1fr; } }
+  .list-card{ background:var(--surface); border:1px solid var(--border); padding:16px 18px; }
+  .list-card h3{ font-size:14px; text-transform:none; font-family:'Ubuntu',sans-serif; font-weight:700; margin:0 0 9px; letter-spacing:0; }
+  .list-card h3 a{ text-decoration:none; border-bottom:2px solid var(--yellow); }
+  .list-card h3 a:hover{ color:var(--red); }
+  .list-card ul{ margin:0; padding-left:17px; color:var(--ink-muted); font-size:12.5px; }
+  .list-card li{ margin-bottom:6px; }
+  .list-card.no h3{ color:var(--red); }
+
+  .retainer{ margin:14px 0; background:var(--surface-2); border:1px solid var(--border); padding:14px 18px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; }
+  .retainer .r-name{ font-weight:700; font-size:13px; }
+  .retainer .r-desc{ color:var(--ink-muted); font-size:12px; margin-top:2px; }
+  .retainer .r-price{ font-family:'Ubuntu Condensed',sans-serif; font-size:26px; }
+
+  footer{ border-top:1px solid var(--border); padding-top:18px; margin-top:6px; display:flex; justify-content:space-between; flex-wrap:wrap; gap:8px; }
+
+  @media print{
+    *{ -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+    @page{ size:A4; margin:12mm; }
+    body{ background:#fff; font-size:12px; }
+    .wrap{ max-width:100%; padding:0; }
+    section{ margin-bottom:22px; }
+    tr, .area, .st, .gap-item, .list-card{ break-inside:avoid; }
+    .section-head{ break-inside:avoid; break-after:avoid; }
+    h3.sub{ break-after:avoid; }
+    section.pb{ break-before:page; }
+    .table-scroll{ break-inside:auto; }
+    .keep{ break-inside:avoid; }
+    .table-scroll, .gantt-box{ overflow:visible; }
+    .m-wide{ min-width:0; }
+    .gantt-box svg{ min-width:0; width:100%; }
+    tbody td{ font-size:11px; padding:7px 9px; }
+    .noprint{ display:none !important; }
+    .signpost{ margin-bottom:18px; }
+  }
+</style>
+
+<div class="wrap">
+
+  <header class="signpost">
+    <img class="logo-img" src="data:image/jpeg;base64,/9j/4QAYRXhpZgAASUkqAAgAAAAAAAAAAAAAAP/sABFEdWNreQABAAQAAAA8AAD/4QNtaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wLwA8P3hwYWNrZXQgYmVnaW49Iu+7vyIgaWQ9Ilc1TTBNcENlaGlIenJlU3pOVGN6a2M5ZCI/PiA8eDp4bXBtZXRhIHhtbG5zOng9ImFkb2JlOm5zOm1ldGEvIiB4OnhtcHRrPSJBZG9iZSBYTVAgQ29yZSA1LjYtYzE0OCA3OS4xNjQwMzYsIDIwMTkvMDgvMTMtMDE6MDY6NTcgICAgICAgICI+IDxyZGY6UkRGIHhtbG5zOnJkZj0iaHR0cDovL3d3dy53My5vcmcvMTk5OS8wMi8yMi1yZGYtc3ludGF4LW5zIyI+IDxyZGY6RGVzY3JpcHRpb24gcmRmOmFib3V0PSIiIHhtbG5zOnhtcE1NPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvbW0vIiB4bWxuczpzdFJlZj0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL3NUeXBlL1Jlc291cmNlUmVmIyIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bXBNTTpPcmlnaW5hbERvY3VtZW50SUQ9InhtcC5kaWQ6NkQ1MDA0OTZGRjZERUIxMThCMzBGNEY3MURDRDEzMkQiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6OTZENTM1QjVFQTM1MTFFQjk1NjM5ODZBMkY0NENDQjAiIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6OTZENTM1QjRFQTM1MTFFQjk1NjM5ODZBMkY0NENDQjAiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNCBXaW5kb3dzIj4gPHhtcE1NOkRlcml2ZWRGcm9tIHN0UmVmOmluc3RhbmNlSUQ9InhtcC5paWQ6MDVENTkxMDA2Rjg1MTFFQkFFQkVFRjU4NDcwRUE2RkUiIHN0UmVmOmRvY3VtZW50SUQ9InhtcC5kaWQ6MDVENTkxMDE2Rjg1MTFFQkFFQkVFRjU4NDcwRUE2RkUiLz4gPC9yZGY6RGVzY3JpcHRpb24+IDwvcmRmOlJERj4gPC94Onht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" alt="Walking Program">
+    <div>
+      <div class="eyebrow">Revisione 2 &#183; Analisi, prodotto, tempi e costi</div>
+      <h1>Walking Program <span class="accent-word">Piattaforma &amp; Sito</span></h1>
+      <div class="meta-row">
+        <span class="meta-item">Data &#183; <b>13 ottobre 2026</b></span>
+        <span class="meta-item">Base &#183; <b>documento &#8220;web dev features&#8221;</b></span>
+        <span class="meta-item">Stack &#183; <b>Astro / Supabase / Vercel / Bunny</b></span>
+        <span class="meta-item">Preparato da &#183; <b>Ready2Digital</b></span>
+      </div>
+    </div>
+  </header>
+
+  <div class="stats">
+    <div class="stat"><div class="n">28</div><div class="l">funzionalit&#224; analizzate, in 2 fasi</div></div>
+    <div class="stat"><div class="n">~96</div><div class="l">giornate di lavoro complessive</div></div>
+    <div class="stat"><div class="n">~21 sett.</div><div class="l">dalla firma al completamento (~5 mesi)</div></div>
+    <div class="stat"><div class="n">14 sett.</div><div class="l">per mettere online la Fase 1; la Fase 2 chiude alla settimana 21</div></div>
+  </div>
+
+  <section>
+    <div class="section-head"><span class="section-badge">01</span><h2>Sintesi</h2></div>
+    <p>Questa revisione recepisce il documento delle funzionalit&#224; inviato da Walking Program. Rispetto alla prima proposta (sito + catalogo + checkout + pannello admin) il progetto cresce in modo sostanziale: <strong>corsi on demand con video protetti, biglietti nominativi, area istruttori, diplomi con approvazione del formatore, crediti e ranking, area palestre, doppia lingua</strong>. Non &#232; pi&#249; un sito vetrina con e-commerce: &#232; una piattaforma di formazione.</p>
+    <p>Per tenere il progetto governabile lo dividiamo in <strong>due fasi</strong>. La <strong>Fase 1</strong> mette online il nuovo sito e tutto ci&#242; che serve a vendere e a erogare i corsi. La <strong>Fase 2</strong> aggiunge la parte di certificazione, ranking, palestre, newsletter e inglese. Affidando le due fasi insieme &#232; previsto uno <strong>sconto dedicato</strong>, indicato nella sezione Investimento.</p>
+    <div class="cols" style="margin-top:14px;">
+      <div class="list-card">
+        <h3>Fase 1 &#183; vendere ed erogare i corsi</h3>
+        <ul>
+          <li>Nuova grafica, UX/UI da zero, sitemap completa, testi in italiano</li>
+          <li>Catalogo, checkout Stripe + PayPal (anche in 3 rate), coupon, tariffe anticipate</li>
+          <li>Account automatico, email automatiche, biglietti nominativi</li>
+          <li>Corsi on demand con video su Bunny, area istruttore, pannello admin</li>
+          <li>Migrazione dal sito WordPress attuale</li>
+        </ul>
+      </div>
+      <div class="list-card">
+        <h3>Fase 2 &#183; certificare, classificare, crescere</h3>
+        <ul>
+          <li>Diplomi PDF e workflow di approvazione del formatore</li>
+          <li>Crediti, livelli e ranking</li>
+          <li>Area palestra e trainer collegati, pagina pubblica delle palestre affiliate</li>
+          <li>Newsletter integrata con liste dinamiche e tracciamenti nella scheda utente</li>
+          <li>Versione inglese con catalogo dedicato</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="section-head"><span class="section-badge">02</span><h2>Punto di partenza</h2><span class="eyebrow">analisi AS-IS e gap</span></div>
+    <p>Walking Program vende formazione dal vivo attraverso un sito <strong>WordPress</strong> con <strong>WooCommerce</strong>, tema <strong>Avada</strong> con <strong>Fusion Builder</strong> e albo istruttori gestito con <strong>Toolset</strong>. Dal backup risultano <strong>215 prodotti/varianti</strong>, <strong>260 istruttori</strong> in albo, circa <strong>1.100 ordini</strong> dal 2021 e <strong>246 account cliente</strong>: un&#8217;attivit&#224; reale e continuativa. Gli istruttori oggi non hanno alcun accesso; gli account cliente sono quelli standard di WooCommerce.</p>
+    <div class="tagcloud">
+      <span class="tag">WordPress</span><span class="tag">WooCommerce</span><span class="tag">Avada</span><span class="tag">Fusion Builder</span>
+      <span class="tag">Toolset CRED</span><span class="tag">Stripe</span><span class="tag">PayPal</span><span class="tag">Klarna</span>
+      <span class="tag">25+ plugin</span><span class="tag">Wordfence</span><span class="tag">Contact Form 7</span>
+    </div>
+    <div class="gap-group">
+      <div class="gap-item"><span class="g-text"><span class="g-title">Nessuna erogazione di contenuti</span><span class="g-impact">Il sito vende l&#8217;iscrizione ma non pu&#242; dare accesso a video, manuali o diplomi: tutto avviene fuori piattaforma.</span></span><span class="severity alto">Alto</span></div>
+      <div class="gap-item"><span class="g-text"><span class="g-title">Nuove edizioni create a mano</span><span class="g-impact">Ogni edizione regionale richiede di duplicare un prodotto WooCommerce e ricrearne le varianti, con rischio di errori su prezzo e posti.</span></span><span class="severity alto">Alto</span></div>
+      <div class="gap-item"><span class="g-text"><span class="g-title">Performance e manutenzione</span><span class="g-impact">Page builder pesante e oltre 25 plugin da aggiornare: caricamento lento, rischio di rotture a ogni aggiornamento.</span></span><span class="severity alto">Alto</span></div>
+      <div class="gap-item"><span class="g-text"><span class="g-title">Albo istruttori non governabile</span><span class="g-impact">260 record su campi custom pensati per sviluppatori, senza accesso n&#233; autonomia per gli istruttori.</span></span><span class="severity medio">Medio</span></div>
+      <div class="gap-item"><span class="g-text"><span class="g-title">Pricing frammentato e invisibilit&#224; sull&#8217;AI</span><span class="g-impact">Tre plugin sovrapposti per sconti e timer; nessun dato strutturato per Google e per i motori di ricerca basati su AI.</span></span><span class="severity medio">Medio</span></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="section-head"><span class="section-badge">03</span><h2>Il prodotto, area per area</h2><span class="eyebrow">cosa viene realizzato</span></div>
+
+    <h3 class="sub" style="margin-top:0;">Sitemap di riferimento</h3>
+    <p class="muted" style="margin-top:0;">Basata sulla mappa Octopus condivisa: <strong>tutte le pagine sono previste fin dalla Fase 1</strong>, comprese Case studies, Media e Contatti.</p>
+    <div class="sitemap">
+      <div class="sm-col"><span class="ph">Fase 1</span><h4>Azienda</h4><ul><li>Home (con calendario eventi e corsi)</li><li>Chi siamo</li><li>Metodo</li></ul></div>
+      <div class="sm-col"><span class="ph">Fase 1</span><h4>WP Academy Trainer</h4><ul><li>Presentazione, Incontra, Unisciti</li><li>Certificazione livello 1 + workshop on demand + education events</li><li>Albo istruttori</li></ul></div>
+      <div class="sm-col"><span class="ph">Fase 1</span><h4>Eventi e WP Walker</h4><ul><li>Eventi pubblici</li><li>WP Walker e attrezzatura, con richiesta di preventivo</li></ul></div>
+      <div class="sm-col"><span class="ph">Fase 1 &#183; Fase 2</span><h4>Reti, media, contatti</h4><ul><li>Case studies, Media, Contatti (Fase 1)</li><li>Fitness club affiliati con elenco e ricerca (Fase 2)</li></ul></div>
+    </div>
+
+    <h3 class="sub">Funzionalit&#224;</h3>
+    <div class="areas">
+      <div class="area">
+        <div class="a-top"><h4>Sito, design e contenuti</h4><span class="phase-chip f1">Fase 1</span></div>
+        <p>Grafica e layout studiati da zero, pensati per far trovare subito il corso giusto e per ridurre gli abbandoni al checkout.</p>
+        <ul>
+          <li>Design desktop e mobile-first con identit&#224; coerente su tutte le pagine</li>
+          <li>Testi in italiano scritti e rifiniti da noi, con un giro di revisione vostro</li>
+          <li>Calendario di eventi e corsi in home; due liste separate (corsi per istruttori, corsi per non istruttori) con etichette <em>in presenza</em> / <em>digitale</em></li>
+          <li>SEO di base, cookie banner e privacy policy, dati strutturati per Google e motori AI</li>
+        </ul>
+      </div>
+      <div class="area">
+        <div class="a-top"><h4>Catalogo e checkout</h4><span class="phase-chip f1">Fase 1</span></div>
+        <p>Un solo catalogo per corsi on demand, corsi in presenza ed eventi, con un unico motore di prezzi al posto dei tre plugin attuali.</p>
+        <ul>
+          <li>Pagamento con Stripe e PayPal, raccolta dati cliente e registrazione</li>
+          <li><strong>Pagamento in 3 rate con PayPal</strong> per importi alti, come la certificazione livello 1 (limiti di importo e commissioni da verificare sul vostro conto PayPal)</li>
+          <li>Coupon, tariffe anticipate con timer, prezzi differenziati (ad esempio tesserati e non)</li>
+          <li>Limite ai posti e ai biglietti vendibili per corso ed evento</li>
+          <li>Richiesta di preventivo per la sezione WP Walker</li>
+        </ul>
+      </div>
+      <div class="area">
+        <div class="a-top"><h4>Account e comunicazioni automatiche</h4><span class="phase-chip f1">Fase 1</span></div>
+        <p>Chi compra non deve fare nulla: l&#8217;account nasce dall&#8217;acquisto.</p>
+        <ul>
+          <li>Account creato in automatico dopo l&#8217;acquisto, con email contenente il link per impostare la password</li>
+          <li>Login e recupero password</li>
+          <li>Email automatiche: attivazione e benvenuto, conferma ordine, pagamento riuscito, diploma disponibile (SendGrid)</li>
+          <li><strong>Biglietto nominativo</strong> per le attivit&#224; in presenza: PDF con nome, cognome, codice univoco e QR</li>
+        </ul>
+      </div>
+      <div class="area">
+        <div class="a-top"><h4>Corsi on demand e video</h4><span class="phase-chip f1">Fase 1</span></div>
+        <p>L&#8217;acquisto abilita l&#8217;accesso ai video, ospitati su <strong>Bunny Stream</strong> e protetti da link firmati a scadenza.</p>
+        <ul>
+          <li>Caricamento dei video direttamente dal pannello admin, senza account Bunny per voi</li>
+          <li>Riproduzione solo agli utenti che hanno acquistato quel corso</li>
+          <li>Manuali PDF scaricabili, conservati in uno spazio privato</li>
+          <li>Accesso attivato in automatico dopo l&#8217;acquisto oppure a mano dall&#8217;admin</li>
+        </ul>
+      </div>
+      <div class="area">
+        <div class="a-top"><h4>Area istruttore</h4><span class="phase-chip f1">Fase 1</span></div>
+        <p>Un&#8217;unica area riservata per tutti gli istruttori, che oggi non hanno nessun accesso.</p>
+        <ul>
+          <li>Dashboard con benvenuto personalizzato e corsi acquistati</li>
+          <li><strong>I miei corsi</strong>: elenco acquisti, accesso ai video, download dei manuali</li>
+          <li>Profilo modificabile: foto, nome, palestra, citt&#224;, Paese, biografia, email, lingua (nome, citt&#224; ed email obbligatori)</li>
+        </ul>
+      </div>
+      <div class="area">
+        <div class="a-top"><h4>Pannello di gestione (admin)</h4><span class="phase-chip f1">Fase 1</span></div>
+        <p>Lo staff gestisce tutto da form semplici, senza toccare codice.</p>
+        <ul>
+          <li>Corsi, edizioni, eventi, prezzi, coupon, posti disponibili</li>
+          <li>Aggiornamento autonomo di PDF e video</li>
+          <li>Attivazione accessi automatica o manuale, elenco ordini e partecipanti</li>
+          <li>Albo istruttori e richieste di preventivo</li>
+        </ul>
+      </div>
+      <div class="area">
+        <div class="a-top"><h4>Diplomi e approvazioni</h4><span class="phase-chip f2">Fase 2</span></div>
+        <p>Due percorsi, come da specifica.</p>
+        <ul>
+          <li><strong>Diploma standard</strong>: PDF generato in automatico all&#8217;acquisto con nome, data e codice, scaricabile in qualsiasi momento</li>
+          <li><strong>Diploma di certificazione</strong>: generato in bozza e reso disponibile solo dopo l&#8217;approvazione del formatore (coda di approvazione, approva/rifiuta, notifiche, storico)</li>
+        </ul>
+      </div>
+      <div class="area">
+        <div class="a-top"><h4>Crediti, livelli e ranking</h4><span class="phase-chip f2">Fase 2</span></div>
+        <p>Regole semplici fornite da Walking Program, ad esempio crediti attribuiti per ogni corso acquistato.</p>
+        <ul>
+          <li>Livello attuale e livello successivo, con i crediti mancanti</li>
+          <li>Ranking calcolato in automatico</li>
+          <li>Diplomi ottenuti visibili in dashboard</li>
+        </ul>
+      </div>
+      <div class="area">
+        <div class="a-top"><h4>Area palestra e trainer</h4><span class="phase-chip f2">Fase 2</span></div>
+        <p>Il trainer pu&#242; operare da solo oppure essere collegato a una palestra; la palestra ha una propria area.</p>
+        <ul>
+          <li>Account trainer singolo, o collegato a una palestra con richiesta e approvazione del collegamento</li>
+          <li>Area riservata palestra: profilo, trainer collegati</li>
+          <li>Pagina pubblica delle <strong>palestre affiliate</strong> con elenco e ricerca</li>
+        </ul>
+      </div>
+      <div class="area">
+        <div class="a-top"><h4>Lingue: italiano e inglese</h4><span class="phase-chip f2">Fase 2</span></div>
+        <p>Il sito nasce predisposto per pi&#249; lingue; l&#8217;inglese arriva in Fase 2.</p>
+        <ul>
+          <li>Catalogo inglese con <strong>solo corsi on demand ed eventi</strong>, senza corsi in presenza: la regola vale per navigazione e vendita</li>
+          <li>Traduzioni scritte e rifinite da noi, con un giro di revisione vostro</li>
+        </ul>
+      </div>
+      <div class="area">
+        <div class="a-top"><h4>Newsletter integrata</h4><span class="phase-chip f2">Fase 2</span></div>
+        <p>Un sistema di invio che usa direttamente i dati del database, senza strumenti esterni da collegare.</p>
+        <ul>
+          <li>Sezione <strong>Newsletter</strong> nel pannello admin, con editor, anteprima, invio di prova e programmazione</li>
+          <li><strong>Liste dinamiche</strong> costruite sui dati: ad esempio istruttori di un livello o di una regione, chi ha acquistato un certo corso, partecipanti a un evento, palestre affiliate. Si aggiornano da sole</li>
+          <li>Invio tramite le <strong>API di SendGrid</strong>, con i template coerenti alla grafica del sito</li>
+          <li><strong>Tracciamenti</strong> (consegne, aperture, click, rimbalzi, disiscrizioni) salvati nella scheda di ogni utente, che diventa una cronologia completa delle comunicazioni</li>
+          <li>Consensi e disiscrizione gestiti in conformit&#224; al GDPR, con report per campagna</li>
+        </ul>
+      </div>
+      <div class="area">
+        <div class="a-top"><h4>Marketing e tracciamenti</h4><span class="phase-chip f1">Fase 1</span></div>
+        <p>Pronto per le campagne fin dal lancio.</p>
+        <ul>
+          <li>Google Tag Manager installato</li>
+          <li>Tracciamento UTM su ogni sorgente di traffico</li>
+          <li>Landing page dedicate per le campagne</li>
+        </ul>
+      </div>
+      <div class="area">
+        <div class="a-top"><h4>Migrazione dal sito attuale</h4><span class="phase-chip f1">Fase 1</span></div>
+        <p>Nessun dato storico va perso.</p>
+        <ul>
+          <li>Albo istruttori (260) e catalogo attivo</li>
+          <li>Ordini storici (~1.100) consultabili nel nuovo sistema</li>
+          <li>Account cliente (246): al primo accesso viene chiesto di reimpostare la password</li>
+          <li>Redirect 301 dai vecchi indirizzi, per non perdere posizionamento</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="section-head"><span class="section-badge">04</span><h2>Come funzionano i flussi chiave</h2></div>
+
+    <h3 class="sub" style="margin-top:0;">Acquisto, account e accesso ai contenuti</h3>
+    <div class="flow">
+      <div class="st"><b>Scelta e pagamento</b><span>Il cliente sceglie corso o evento e paga con Stripe o PayPal (anche in 3 rate).</span></div>
+      <div class="st"><b>Account automatico</b><span>Il sistema crea l&#8217;account e invia l&#8217;email per impostare la password.</span></div>
+      <div class="st"><b>Conferme</b><span>Email di benvenuto, ordine e pagamento. Per le attivit&#224; in presenza, biglietto nominativo con codice.</span></div>
+      <div class="st"><b>Accesso attivato</b><span>Per i corsi on demand si sbloccano video e manuali, in automatico o a mano dall&#8217;admin.</span></div>
+      <div class="st"><b>Diploma</b><span>Il diploma &#232; disponibile nell&#8217;area personale e scaricabile quando serve.</span></div>
+    </div>
+
+    <h3 class="sub">Caricare un video (lato Walking Program)</h3>
+    <div class="flow four">
+      <div class="st"><b>Aggiungi video</b><span>Nel pannello, dentro il corso: si trascina il file MP4 e si d&#224; titolo e ordine.</span></div>
+      <div class="st"><b>Caricamento diretto</b><span>Il file va dal browser a Bunny, riprendibile in caso di interruzione. Non passa dal nostro server.</span></div>
+      <div class="st"><b>Elaborazione</b><span>Bunny converte il video; lo stato passa da &#8220;in elaborazione&#8221; a &#8220;pronto&#8221; in pochi minuti.</span></div>
+      <div class="st"><b>Pubblicazione</b><span>Si sceglie l&#8217;accesso (automatico dopo l&#8217;acquisto o manuale). Per sostituire un video se ne carica uno nuovo.</span></div>
+    </div>
+    <div class="note-box"><b>Cosa serve a voi:</b> un file MP4 (H.264, al massimo 1080p) e un po&#8217; di pazienza sui file grandi, che dipende dalla vostra connessione. Non serve alcun account Bunny: l&#8217;account &#232; gestito da noi. <b>Limite da sapere:</b> i link firmati proteggono dalla condivisione dell&#8217;indirizzo del video, non dalla registrazione dello schermo.</div>
+
+    <h3 class="sub">Diploma di certificazione con approvazione del formatore</h3>
+    <div class="flow four">
+      <div class="st"><b>Acquisto</b><span>L&#8217;istruttore acquista il corso di certificazione.</span></div>
+      <div class="st"><b>Bozza automatica</b><span>Il sistema genera il PDF con nome, data e codice, ma non lo rende disponibile.</span></div>
+      <div class="st"><b>Approvazione</b><span>Il formatore vede la richiesta in coda, approva o rifiuta; ogni decisione &#232; registrata.</span></div>
+      <div class="st"><b>Disponibile</b><span>Dopo l&#8217;approvazione, email &#8220;diploma disponibile&#8221; e download dall&#8217;area personale.</span></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="section-head"><span class="section-badge">05</span><h2>Analisi di dettaglio: funzione e giornate</h2></div>
+    <p class="muted" style="margin-top:0;">Ogni funzionalit&#224; del documento &#8220;web dev features&#8221; &#232; tradotta in una voce di lavoro. Le giornate sono la stima di design, sviluppo e test; gli importi sono riepilogati in fondo al documento.</p>
+    <div class="table-scroll">
+      <table class="m-wide">
+        <thead><tr><th>Area</th><th>Funzionalit&#224; richiesta</th><th>Come la realizziamo</th><th class="num">Giornate</th></tr></thead>
+        <tbody id="matrix"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <div class="section-head"><span class="section-badge">06</span><h2>Tempi</h2><span class="eyebrow">~21 settimane dalla firma</span></div>
+    <p>Le settimane sono di calendario e tengono conto dei tempi di revisione. La <strong>Fase 1 va online entro 14 settimane</strong>, la <strong>Fase 2 chiude alla settimana 21</strong>. I 60 giorni previsti dalla prima proposta valevano per il solo sito con catalogo e checkout: con questo scope non sono pi&#249; realistici.</p>
+    <div class="gantt-box">
+      <svg id="gantt" role="img" aria-label="Cronoprogramma del progetto in 21 settimane"></svg>
+      <div class="legend">
+        <div class="legend-item"><span class="swatch" style="background:var(--ink)"></span>Fase 1</div>
+        <div class="legend-item"><span class="swatch" style="background:var(--red)"></span>Fase 2</div>
+        <div class="legend-item">Linee tratteggiate: milestone di pagamento e consegna</div>
+      </div>
+    </div>
+
+    <h3 class="sub">Cosa ci serve da voi, e quando</h3>
+    <div class="table-scroll">
+      <table>
+        <thead><tr><th>Cosa</th><th>Entro settimana</th><th>Perch&#233;</th></tr></thead>
+        <tbody>
+          <tr><td class="area-c">Logo, materiali di brand e foto</td><td class="num">2</td><td class="sol">Base del nuovo design</td></tr>
+          <tr><td class="area-c">Approvazione del design</td><td class="num">4&#8211;6</td><td class="sol">Sblocca lo sviluppo delle pagine</td></tr>
+          <tr><td class="area-c">Accesso a Stripe e PayPal Business</td><td class="num">5</td><td class="sol">Configurazione pagamenti e rate</td></tr>
+          <tr><td class="area-c">Video e PDF dei corsi on demand</td><td class="num">8</td><td class="sol">Test dell&#8217;erogazione e della protezione</td></tr>
+          <tr><td class="area-c">Revisione testi in italiano</td><td class="num">9</td><td class="sol">Pubblicazione dei contenuti</td></tr>
+          <tr><td class="area-c">Regole di crediti e livelli; elenco formatori approvatori e palestre affiliate</td><td class="num">15</td><td class="sol">Avvio della Fase 2</td></tr>
+          <tr><td class="area-c">Revisione traduzioni in inglese</td><td class="num">19</td><td class="sol">Chiusura della Fase 2</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="muted" style="margin-top:10px;">Ipotesi di calendario: feedback e approvazioni entro 3 giorni lavorativi. Ogni ritardo nelle consegne sopra indicate sposta le date di pari durata.</p>
+  </section>
+
+  <section>
+    <div class="section-head"><span class="section-badge">07</span><h2>Inclusioni, esclusioni e ipotesi</h2></div>
+    <div class="cols">
+      <div class="list-card">
+        <h3>Incluso</h3>
+        <ul>
+          <li>Nuova grafica, design e ottimizzazione mobile</li>
+          <li>Copy in italiano e traduzione in inglese, con un giro di revisione vostro per fase</li>
+          <li>Migrazione di albo istruttori, ordini storici e account</li>
+          <li>SEO di base, cookie banner, privacy policy, GTM, UTM, landing page</li>
+          <li>Formazione dello staff all&#8217;uso del pannello</li>
+          <li>30 giorni di assistenza dopo ciascun go-live</li>
+        </ul>
+      </div>
+      <div class="list-card no">
+        <h3>Escluso</h3>
+        <ul>
+          <li>Produzione e montaggio dei video</li>
+          <li>Blog e traduzioni in lingue diverse da italiano e inglese</li>
+          <li>Integrazione con piattaforme esterne di marketing automation (ad esempio Brevo): al loro posto proponiamo il modulo Newsletter integrato</li>
+          <li>Revisioni oltre il giro previsto per testi, traduzioni e design</li>
+          <li>Pubblicit&#224; e gestione dei canali social</li>
+        </ul>
+      </div>
+    </div>
+    <div class="note-box"><b>Ipotesi di progetto:</b> il diploma standard viene emesso all&#8217;acquisto, come indicato nel documento; un controllo di completamento del corso pu&#242; essere aggiunto in seguito. Il pagamento in 3 rate dipende dalla disponibilit&#224; di PayPal &#8220;Paga in 3 rate&#8221; sul conto di Walking Program e dai limiti di importo. Crediti e livelli seguiranno le regole che Walking Program fornir&#224; prima dell&#8217;avvio della Fase 2.</div>
+  </section>
+
+  <section>
+    <div class="section-head"><span class="section-badge">08</span><h2>Chi &#232; Ready2Digital</h2></div>
+    <p>Ready2Digital progetta e sviluppa siti e piattaforme e-commerce <strong>interamente in codice</strong> &#8212; niente page builder, niente plugin da mantenere. Lavoriamo prevalentemente nel settore sport, fitness e formazione, con uno stack moderno pensato per velocit&#224;, SEO e gestione autonoma dei contenuti. Tre esempi dello stesso settore, per verificare di persona velocit&#224; e fluidit&#224;:</p>
+    <div class="cols" style="grid-template-columns:repeat(3,1fr);">
+      <div class="list-card"><h3><a href="https://athlonroma.it" target="_blank" rel="noopener">athlonroma.it</a></h3><ul><li>Athlon Club 4.0 &#8212; palestre e piscine, Roma</li></ul></div>
+      <div class="list-card"><h3><a href="https://ronchiverdi.it" target="_blank" rel="noopener">ronchiverdi.it</a></h3><ul><li>Ronchiverdi Sport Club, Torino</li></ul></div>
+      <div class="list-card"><h3><a href="https://tcambrosiano.com" target="_blank" rel="noopener">tcambrosiano.com</a></h3><ul><li>TC Ambrosiano Milano &#8212; tennis, padel, pickleball</li></ul></div>
+    </div>
+  </section>
+
+  <section class="pb">
+    <div class="section-head"><span class="section-badge">09</span><h2>Investimento</h2><span class="eyebrow noprint">modifica la selezione per vedere il totale</span></div>
+    <label class="toggle noprint"><input type="checkbox" id="chk-f2" checked><span><b>Includi la Fase 2</b> e ottieni lo sconto di affidamento unico. La Fase 2 pu&#242; anche essere ordinata pi&#249; avanti, al prezzo di listino.</span></label>
+
+    <div class="table-scroll">
+      <table>
+        <thead><tr><th>Voce</th><th>Contenuto</th><th class="num">Giornate</th><th class="num">Importo, IVA esclusa</th></tr></thead>
+        <tbody id="inv-body"></tbody>
+      </table>
+    </div>
+
+    <h3 class="sub">Modalit&#224; di pagamento</h3>
+    <div class="table-scroll keep">
+      <table>
+        <thead><tr><th>Quando</th><th class="num">Settimana</th><th class="num">%</th><th class="num">Importo, IVA esclusa</th></tr></thead>
+        <tbody id="pay-body"></tbody>
+      </table>
+    </div>
+    <p class="muted" style="margin-top:10px;">Tutti gli importi sono IVA esclusa; l&#8217;IVA al 22% si aggiunge a ogni fattura.</p>
+  </section>
+
+  <section>
+    <div class="section-head"><span class="section-badge">10</span><h2>Canone annuale: hosting, licenze, video, manutenzione</h2></div>
+    <p>Il progetto &#232; abbastanza articolato: account, pagamenti, video, diplomi con approvazione, ruoli per istruttori e palestre. Per questo il canone annuale <strong>non lo definiamo a tavolino</strong>: va prima capito, insieme, <strong>chi gestisce cosa</strong> una volta online, e quindi qual &#232; il carico di lavoro effettivo.</p>
+    <div class="retainer">
+      <div>
+        <div class="r-name">Canone annuale di gestione: da definire in una call</div>
+        <div class="r-desc">Comprende hosting, licenze, servizio video, backup e ripristino, aggiornamenti, supporto operativo e assistenza dopo il lancio</div>
+      </div>
+      <div class="r-price" style="font-size:18px;">Call da fissare</div>
+    </div>
+    <h3 class="sub">Cosa chiariremo nella call</h3>
+    <div class="cols">
+      <div class="list-card">
+        <h3>Chi gestisce cosa</h3>
+        <ul>
+          <li>Chi carica corsi, edizioni, prezzi, video e PDF, e quante persone useranno il pannello</li>
+          <li>Chi risponde agli istruttori e ai clienti per i problemi di accesso, password, pagamenti e rate</li>
+          <li>Chi approva i diplomi di certificazione, e con quali tempi</li>
+          <li>Cosa resta a noi: aggiornamenti, backup, monitoraggio, correzione dei problemi</li>
+        </ul>
+      </div>
+      <div class="list-card">
+        <h3>Come si dimensiona il canone</h3>
+        <ul>
+          <li>Volumi attesi: ordini al mese, istruttori attivi, ore di video e traffico</li>
+          <li>Tempi di intervento richiesti in caso di problema</li>
+          <li>Quanta operativit&#224; resta a Walking Program e quanta passa a noi</li>
+          <li>Evoluzioni previste dopo il lancio, da quotare a parte o a monte ore</li>
+        </ul>
+      </div>
+    </div>
+<h3 class="sub">Servizi coinvolti</h3>
+    <div class="table-scroll">
+      <table>
+        <thead><tr><th>Servizio</th><th>A cosa serve</th></tr></thead>
+        <tbody>
+          <tr><td class="area-c">Vercel</td><td class="sol">Hosting del sito e delle funzioni</td></tr>
+          <tr><td class="area-c">Supabase</td><td class="sol">Database, accessi, spazio per i PDF</td></tr>
+          <tr><td class="area-c">Bunny Stream</td><td class="sol">Archiviazione e riproduzione dei video</td></tr>
+          <tr><td class="area-c">SendGrid</td><td class="sol">Email transazionali e diplomi</td></tr>
+          <tr><td class="area-c">Dominio</td><td class="sol">Registrazione e DNS</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="muted" style="margin-top:10px;">Le commissioni di Stripe e PayPal (comprese quelle del pagamento in 3 rate) restano a carico di Walking Program, perch&#233; legate al loro conto di incasso.</p>
+  </section>
+
+  <footer>
+    <span class="eyebrow">Walking Program &#183; Proposta valida 30 giorni &#183; Importi IVA esclusa (+22%)</span>
+    <span class="eyebrow">Ready2Digital &#183; maurizio@ready2digital.it</span>
+  </footer>
+</div>
+
+<script>
+(function(){
+  var F1 = 18000, F2 = 8000, NL = 2000, DISC = 6000;
+  var f1 = [
+    ['Impostazione','Sitemap, architettura, data model','Analisi della sitemap Octopus; schema Supabase per corsi, edizioni, ordini, utenti, ruoli, video, diplomi',2],
+    ['Design','Nuova grafica, design, mobile','Sistema grafico da zero, home e template di pagina, versione desktop e mobile, un giro di revisione',6],
+    ['Sito','Sitemap completa (azienda, metodo, WP Academy Trainer, eventi, WP Walker, case studies, media, contatti)','Sviluppo Astro: pagine statiche veloci, template modificabili da pannello',4.5],
+    ['Contenuti','Copy in italiano','Testi scritti e rifiniti da noi, un giro di revisione vostro',4],
+    ['Sito','Calendario eventi e corsi in home; liste istruttori / non istruttori; etichette in presenza e digitale','Componenti calendario e filtri alimentati dal catalogo',3],
+    ['Catalogo','Catalogo acquistabile: on demand, in presenza, eventi; limite a posti e biglietti','Modello unico corso/edizione, schede prodotto, disponibilit\u00e0 in tempo reale',3.5],
+    ['Checkout','Stripe e PayPal, dati cliente, coupon, tariffe anticipate con timer, prezzi differenziati','Checkout in una pagina e motore prezzi unico al posto dei tre plugin',4],
+    ['Checkout','Pagamento in 3 rate','PayPal \u201cPaga in 3 rate\u201d per i prodotti di importo alto',1.5],
+    ['Biglietti','Biglietto nominativo (nome, cognome, codice)','Un biglietto PDF per partecipante, con codice univoco e QR, inviato via email',3],
+    ['Account','Account automatico, email per impostare la password, login, recupero','Supabase Auth con creazione utente a fine acquisto',2.5],
+    ['Email','Email di benvenuto/attivazione, conferma ordine, pagamento riuscito, diploma disponibile','Template SendGrid coerenti con la grafica, innescati dagli eventi',2.5],
+    ['On demand','Corsi on demand con accesso ai video','Bunny Stream: upload da admin, webhook di elaborazione, riproduzione con link firmati e controllo acquisto',4.5],
+    ['Area istruttore','Dashboard, I miei corsi (video e PDF), profilo modificabile','Area riservata con ruoli e permessi; profilo con campi obbligatori',6],
+    ['Admin','Pannello di gestione: contenuti, prodotti, edizioni, prezzi, coupon; upload PDF e video; attivazione accessi automatica o manuale','Form semplici su Supabase, elenco ordini e partecipanti',4.5],
+    ['WP Walker','Richiesta di preventivo','Modulo con invio email e archivio richieste nel pannello',1],
+    ['Marketing e SEO','SEO di base, cookie, privacy policy, GTM, UTM, landing page campagne','Dati strutturati, banner cookie, container GTM, parametri UTM salvati, template landing',2],
+    ['Migrazione','Albo istruttori, ordini storici, account clienti, catalogo','Script di import dal dump WordPress; reimpostazione password al primo accesso',4.5],
+    ['Collaudo','Test, formazione dello staff, go-live Fase 1','Test end-to-end, sessione di formazione, passaggio DNS e redirect 301',3]
+  ];
+  var f2 = [
+    ['Diplomi','Diplomi PDF automatici all\u2019acquisto, sempre scaricabili','Generazione PDF con nome, data e codice univoco',2],
+    ['Diplomi','Diplomi di certificazione con approvazione del formatore','Bozza automatica, coda di approvazione, approva/rifiuta, notifiche e storico',3],
+    ['Crediti','Crediti, livello attuale e successivo, crediti mancanti, ranking','Regole fornite da Walking Program; calcolo automatico e dashboard',3.5],
+    ['Area palestra','Trainer singolo o collegato a una palestra; area riservata palestra','Nuovo ruolo palestra, collegamento trainer con richiesta e approvazione',5],
+    ['Palestre','Pagina pubblica delle palestre affiliate con elenco e ricerca','Pagina con ricerca per nome e citt\u00e0 alimentata dai profili palestra',2.5],
+    ['Inglese','Versione inglese con catalogo di soli corsi on demand ed eventi','Struttura multilingua, regole di navigazione e vendita per lingua',4],
+    ['Traduzioni','Traduzioni in inglese','Traduzione rifinita da noi, un giro di revisione vostro',3],
+    ['Dati','Censimento palestre, crediti pregressi, dati iniziali di ranking','Import e verifica dei dati forniti',1.5],
+    ['Newsletter','Sezione newsletter con liste dinamiche, invio via API SendGrid, tracciamenti nella scheda utente','Segmenti sui dati del database, editor con anteprima e invio di prova, eventi di consegna, aperture, click e disiscrizioni salvati nell\u2019anagrafica, consensi GDPR, report per campagna',6],
+    ['Collaudo','Test, formazione, go-live Fase 2','Test end-to-end, formazione, rilascio',3]
+  ];
+
+  function fmt(n){ return '\u20ac ' + String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g, '.'); }
+  function days(n){ return String(n).replace('.', ',') ; }
+
+  function buildRows(rows, label, sumLabel){
+    var totalDays = rows.reduce(function(s,r){return s+r[3];},0);
+    var html = '<tr class="phase-row"><td colspan="4">'+label+'</td></tr>';
+    rows.forEach(function(r){
+      html += '<tr><td class="area-c">'+r[0]+'</td><td>'+r[1]+'</td><td class="sol">'+r[2]+'</td><td class="num">'+days(r[3])+'</td></tr>';
+    });
+    html += '<tr class="subtotal"><td colspan="3">'+sumLabel+'</td><td class="num">'+days(totalDays)+'</td></tr>';
+    return {html:html, days:totalDays};
+  }
+  var a = buildRows(f1, 'Fase 1 \u00b7 vendere ed erogare i corsi', 'Totale Fase 1');
+  var b = buildRows(f2, 'Fase 2 \u00b7 certificare, classificare, crescere', 'Totale Fase 2');
+  var grand = '<tr class="grand"><td colspan="3">Totale giornate, Fase 1 + Fase 2</td><td class="num">'+days(a.days+b.days)+'</td></tr>';
+  document.getElementById('matrix').innerHTML = a.html + b.html + grand;
+
+  // gantt
+  var rowsG = [
+    {g:'Fase 1', t:'Discovery e data model', s:1, e:2, c:'g-f1'},
+    {t:'Design UX/UI', s:2, e:6, c:'g-f1'},
+    {t:'Contenuti in italiano', s:3, e:8, c:'g-f1'},
+    {t:'Sito, catalogo, checkout', s:5, e:11, c:'g-f1'},
+    {t:'Account, email, biglietti', s:7, e:11, c:'g-f1'},
+    {t:'On demand (Bunny) e area istruttore', s:8, e:12, c:'g-f1'},
+    {t:'Migrazione dati', s:10, e:13, c:'g-f1'},
+    {t:'Collaudo e go-live Fase 1', s:13, e:14, c:'g-f1'},
+    {g:'Fase 2', t:'Diplomi e approvazione formatore', s:15, e:17, c:'g-f2'},
+    {t:'Crediti e ranking', s:16, e:17, c:'g-f2'},
+    {t:'Area palestra e pagina pubblica', s:16, e:19, c:'g-f2'},
+    {t:'Newsletter integrata', s:17, e:20, c:'g-f2'},
+    {t:'Versione inglese e traduzioni', s:18, e:21, c:'g-f2'},
+    {t:'Collaudo e go-live Fase 2', s:20, e:21, c:'g-f2'}
+  ];
+  var W = 1000, x0 = 250, weeks = 21, cw = (W - x0 - 10)/weeks, top = 30, rh = 26;
+  var y = top, items = '', grid = '', ns = 'http://www.w3.org/2000/svg';
+  rowsG.forEach(function(r){
+    if(r.g){ items += '<text class="g-mut" x="4" y="'+(y+14)+'" style="text-transform:uppercase;letter-spacing:.08em;font-weight:700">'+r.g+'</text>'; y += 22; }
+    items += '<text class="g-txt" x="4" y="'+(y+15)+'">'+r.t+'</text>';
+    items += '<rect class="'+r.c+'" x="'+(x0+(r.s-1)*cw+1)+'" y="'+(y+4)+'" width="'+((r.e-r.s+1)*cw-2)+'" height="'+(rh-10)+'" rx="2"></rect>';
+    y += rh;
+  });
+  var H = y + 44;
+  for(var w=1; w<=weeks; w++){
+    grid += '<text class="g-mut" x="'+(x0+(w-0.5)*cw)+'" y="16" text-anchor="middle">'+w+'</text>';
+    grid += '<line class="g-grid" x1="'+(x0+(w-1)*cw)+'" y1="24" x2="'+(x0+(w-1)*cw)+'" y2="'+(y)+'"></line>';
+  }
+  grid += '<line class="g-grid" x1="'+(x0+weeks*cw)+'" y1="24" x2="'+(x0+weeks*cw)+'" y2="'+y+'"></line>';
+  grid += '<text class="g-mut" x="4" y="16">SETTIMANA</text>';
+  var ms = [[7,'Staging catalogo e checkout'],[14,'Go-live Fase 1'],[21,'Go-live Fase 2']], msh = '';
+  ms.forEach(function(m, i){
+    var x = x0 + m[0]*cw;
+    msh += '<line class="g-ms" x1="'+x+'" y1="24" x2="'+x+'" y2="'+(y+8)+'"></line>';
+    msh += '<text class="g-txt" x="'+x+'" y="'+(y+22+i*0)+'" text-anchor="end" style="font-weight:700">'+m[1]+' \u00b7 sett. '+m[0]+'</text>';
+  });
+  var svg = document.getElementById('gantt');
+  svg.setAttribute('viewBox', '0 0 '+W+' '+(H));
+  svg.innerHTML = grid + items + msh;
+
+  // investimento
+  var chk = document.getElementById('chk-f2');
+  var d1 = a.days, d2 = b.days;
+  function update(){
+    var inc = chk.checked;
+    var net = F1 + (inc ? F2 + NL - DISC : 0);
+    var h = '<tr><td class="area-c">Fase 1</td><td>Vendere ed erogare i corsi: sito, catalogo, checkout, account, on demand, area istruttore, migrazione</td><td class="num">'+days(d1)+'</td><td class="num">'+fmt(F1)+'</td></tr>';
+    if(inc){
+      h += '<tr><td class="area-c">Fase 2</td><td>Diplomi con approvazione, crediti e ranking, area palestra, versione inglese</td><td class="num">'+days(d2-6)+'</td><td class="num">'+fmt(F2)+'</td></tr>';
+      h += '<tr><td class="area-c">Fase 2 \u00b7 Newsletter</td><td>Newsletter integrata: liste dinamiche, invio via API SendGrid, tracciamenti nell\u2019anagrafica utente</td><td class="num">6</td><td class="num">'+fmt(NL)+'</td></tr>';
+      h += '<tr class="subtotal"><td colspan="2">Totale a listino, Fase 1 + Fase 2</td><td class="num">'+days(d1+d2)+'</td><td class="num">'+fmt(F1+F2+NL)+'</td></tr>';
+      h += '<tr><td class="area-c" style="color:var(--red)">Sconto</td><td>Affidamento unico di Fase 1 e Fase 2</td><td class="num"></td><td class="num" style="color:var(--red)">\u2212 '+fmt(DISC)+'</td></tr>';
+    }
+    h += '<tr class="grand"><td colspan="3">Totale progetto, IVA esclusa</td><td class="num">'+fmt(net)+'</td></tr>';
+    h += '<tr class="subtotal"><td colspan="3">IVA 22%</td><td class="num">'+fmt(net*0.22)+'</td></tr>';
+    h += '<tr class="subtotal"><td colspan="3">Totale con IVA</td><td class="num">'+fmt(net*1.22)+'</td></tr>';
+    document.getElementById('inv-body').innerHTML = h;
+
+    var rows = inc ? [
+      ['Alla firma della proposta',0,30],
+      ['Staging con catalogo e checkout funzionanti',7,20],
+      ['Go-live Fase 1',14,20],
+      ['Avvio Fase 2',15,15],
+      ['Go-live Fase 2',21,15]
+    ] : [
+      ['Alla firma della proposta',0,30],
+      ['Staging con catalogo e checkout funzionanti',7,40],
+      ['Go-live Fase 1',14,30]
+    ];
+    var p = rows.map(function(r){ return '<tr><td class="area-c">'+r[0]+'</td><td class="num">'+r[1]+'</td><td class="num">'+r[2]+'%</td><td class="num">'+fmt(net*r[2]/100)+'</td></tr>'; }).join('');
+    p += '<tr class="subtotal"><td colspan="3">Totale, IVA esclusa</td><td class="num">'+fmt(net)+'</td></tr>';
+    document.getElementById('pay-body').innerHTML = p;
+  }
+  chk.addEventListener('change', update);
+  update();
+})();
+</script>
+
+</body></html>
